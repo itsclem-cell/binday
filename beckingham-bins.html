@@ -1,0 +1,1665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beckingham Bin Days</title>
+<meta name="description" content="Know when to put your bins out in Beckingham, Nottinghamshire. Blue, green, brown and glass bin collection dates from Bassetlaw District Council.">
+
+<!-- PWA / Add to Home Screen -->
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Bin Days">
+<meta name="theme-color" content="#1e3a5f">
+<link rel="manifest" href="manifest.json">
+
+<!-- Open Graph (for sharing on WhatsApp, Facebook etc) -->
+<meta property="og:title" content="Beckingham Bin Days">
+<meta property="og:description" content="Know when to put your bins out in Beckingham. Blue, green, brown and glass bin collection dates.">
+<meta property="og:type" content="website">
+
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue-bin: #2563eb;
+    --blue-bin-light: #dbeafe;
+    --green-bin: #16a34a;
+    --green-bin-light: #dcfce7;
+    --brown-bin: #92400e;
+    --brown-bin-light: #fef3c7;
+    --black-bin: #1c1c1c;
+    --black-bin-light: #e5e7eb;
+    --food-bin: #7c3aed;
+    --food-bin-light: #ede9fe;
+    --bg: #f0f4f8;
+    --card: #ffffff;
+    --text: #1a202c;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --radius: 20px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  header {
+    background: linear-gradient(135deg, #1e3a5f 0%, #2d6a4f 100%);
+    color: white;
+    padding: 28px 20px 24px;
+    text-align: center;
+  }
+  header h1 {
+    font-size: 2rem;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+  }
+  header p {
+    font-size: 1.1rem;
+    margin-top: 6px;
+    opacity: 0.88;
+    font-weight: 600;
+  }
+  .council-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 50px;
+    padding: 4px 14px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin-top: 10px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .resident-notice {
+    background: rgba(0,0,0,0.25);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 0.83rem;
+    font-weight: 700;
+    margin-top: 14px;
+    line-height: 1.5;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .main { max-width: 700px; margin: 0 auto; padding: 24px 16px 40px; }
+
+  /* TODAY BANNER */
+  .today-banner {
+    background: linear-gradient(135deg, #1e3a5f, #2d6a4f);
+    color: white;
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: var(--shadow);
+  }
+  .today-banner .bell { font-size: 2.4rem; flex-shrink: 0; }
+  .today-banner h2 { font-size: 1.25rem; font-weight: 900; line-height: 1.2; }
+  .today-banner p { font-size: 1rem; opacity: 0.9; margin-top: 4px; font-weight: 600; }
+
+  /* SECTION HEADINGS */
+  .section-title {
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 28px 0 14px;
+  }
+
+  /* BIN CARDS */
+  .bin-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 10px;
+  }
+  @media (max-width: 480px) {
+    .bin-grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 1.6rem; }
+  }
+
+  .bin-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 20px 18px;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: transform 0.18s, box-shadow 0.18s;
+    border: 3px solid transparent;
+    position: relative;
+    overflow: hidden;
+  }
+  .bin-card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(0,0,0,0.14); }
+  .bin-card:active { transform: scale(0.98); }
+
+  .bin-card.blue  { border-color: var(--blue-bin); }
+  .bin-card.green { border-color: var(--green-bin); }
+  .bin-card.brown { border-color: var(--brown-bin); }
+  .bin-card.black { border-color: #444; }
+  .bin-card.food  { border-color: var(--food-bin); opacity: 0.75; }
+
+  .bin-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .bin-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    flex-shrink: 0;
+  }
+  .blue  .bin-icon { background: var(--blue-bin-light); }
+  .green .bin-icon { background: var(--green-bin-light); }
+  .brown .bin-icon { background: var(--brown-bin-light); }
+  .black .bin-icon { background: var(--black-bin-light); }
+  .food  .bin-icon { background: var(--food-bin-light); }
+
+  .bin-label {
+    flex: 1;
+  }
+  .bin-label .name {
+    font-size: 1.1rem;
+    font-weight: 900;
+    line-height: 1.1;
+  }
+  .bin-label .type {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .blue  .bin-label .name { color: var(--blue-bin); }
+  .green .bin-label .name { color: var(--green-bin); }
+  .brown .bin-label .name { color: var(--brown-bin); }
+  .black .bin-label .name { color: #222; }
+  .food  .bin-label .name { color: var(--food-bin); }
+
+  .next-collection {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+  .next-collection .label {
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+  .next-collection .date {
+    font-size: 1.25rem;
+    font-weight: 900;
+    margin-top: 2px;
+    line-height: 1.1;
+  }
+  .next-collection .days-away {
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-top: 3px;
+  }
+  .blue  .next-collection .date { color: var(--blue-bin); }
+  .green .next-collection .date { color: var(--green-bin); }
+  .brown .next-collection .date { color: var(--brown-bin); }
+  .black .next-collection .date { color: #222; }
+  .food  .next-collection .date { color: var(--food-bin); }
+
+  .coming-soon-tag {
+    display: inline-block;
+    background: var(--food-bin-light);
+    color: var(--food-bin);
+    font-size: 0.78rem;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: 50px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .bin-card-footer {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .btn-small {
+    flex: 1;
+    min-width: 80px;
+    background: #f1f5f9;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 6px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: var(--text);
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    transition: background 0.15s;
+    text-align: center;
+  }
+  .btn-small:hover { background: #e2e8f0; }
+  .btn-small .icon { display: block; font-size: 1rem; margin-bottom: 2px; }
+
+  /* PUTOUT REMINDER */
+  .putout-card {
+    background: #fff8e1;
+    border: 2px solid #f59e0b;
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow);
+  }
+  .putout-card .icon { font-size: 2rem; flex-shrink: 0; margin-top: 2px; }
+  .putout-card h3 { font-size: 1.05rem; font-weight: 900; color: #92400e; }
+  .putout-card p { font-size: 0.95rem; font-weight: 600; color: #78350f; margin-top: 4px; line-height: 1.4; }
+
+  /* WHAT GOES IN MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 999;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 16px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: white;
+    border-radius: 24px 24px 20px 20px;
+    width: 100%;
+    max-width: 640px;
+    max-height: 88vh;
+    overflow-y: auto;
+    padding: 28px 22px 32px;
+    animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(60px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+  .modal-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .modal-header .modal-icon {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.7rem;
+  }
+  .modal-header h2 { font-size: 1.4rem; font-weight: 900; }
+  .modal-close {
+    margin-left: auto;
+    background: #f1f5f9;
+    border: none;
+    border-radius: 50%;
+    width: 38px; height: 38px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .items-section { margin-bottom: 20px; }
+  .items-section h3 {
+    font-size: 0.85rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 8px;
+  }
+  .item-chip {
+    background: #f8fafc;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 10px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    line-height: 1.2;
+  }
+  .item-chip.no {
+    background: #fff1f2;
+    border-color: #fecdd3;
+    color: #be123c;
+  }
+  .item-chip .chip-icon { font-size: 1.4rem; }
+
+  /* SCHEDULE LIST */
+  .schedule-list { list-style: none; }
+  .schedule-list li {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 1rem;
+    font-weight: 700;
+  }
+  .schedule-list li:last-child { border-bottom: none; }
+  .schedule-list .s-date { flex: 1; }
+  .schedule-list .s-dow {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .schedule-list .s-away {
+    font-size: 0.82rem;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: 50px;
+  }
+  .s-past { opacity: 0.4; }
+  .s-next { background: #fef9c3; }
+  .s-next .s-away { background: #fde047; color: #713f12; }
+  .s-future .s-away { background: #f1f5f9; color: #475569; }
+
+  /* ACTION BUTTONS */
+  .actions-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  @media (max-width: 400px) { .actions-row { grid-template-columns: 1fr; } }
+
+  .btn-action {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 12px;
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--text);
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    text-align: center;
+    transition: all 0.15s;
+    text-decoration: none;
+    display: block;
+  }
+  .btn-action:hover { background: #f8fafc; border-color: #94a3b8; }
+  .btn-action .a-icon { display: block; font-size: 1.4rem; margin-bottom: 4px; }
+
+  /* LINKS SECTION */
+  .links-section {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .link-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    color: var(--text);
+    font-size: 1rem;
+    font-weight: 700;
+    transition: background 0.15s;
+  }
+  .link-item:last-child { border-bottom: none; }
+  .link-item:hover { background: #f8fafc; }
+  .link-item .l-icon {
+    width: 42px; height: 42px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+  .link-item .l-arrow { margin-left: auto; color: var(--muted); }
+  .link-item p { font-size: 0.82rem; font-weight: 600; color: var(--muted); margin-top: 2px; }
+
+  /* CONTACT FORM */
+  .contact-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 24px 20px;
+    box-shadow: var(--shadow);
+    margin-bottom: 28px;
+  }
+  .contact-card h3 { font-size: 1.1rem; font-weight: 900; margin-bottom: 6px; color: #1e3a5f; }
+  .contact-card > p { font-size: 0.92rem; font-weight: 600; color: var(--muted); margin-bottom: 20px; line-height: 1.5; }
+  .form-group { margin-bottom: 16px; }
+  .form-label { display: block; font-size: 0.88rem; font-weight: 800; margin-bottom: 7px; color: var(--text); }
+  .form-input {
+    width: 100%;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 1rem;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 600;
+    color: var(--text);
+    background: #f8fafc;
+    transition: border-color 0.15s;
+    outline: none;
+  }
+  .form-input:focus { border-color: #1e3a5f; background: white; }
+  .form-textarea { min-height: 100px; resize: vertical; }
+  .type-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .type-pill {
+    background: #f1f5f9;
+    border: 2px solid var(--border);
+    border-radius: 50px;
+    padding: 8px 14px;
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--text);
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    transition: all 0.15s;
+  }
+  .type-pill.active { background: #1e3a5f; border-color: #1e3a5f; color: white; }
+  .type-pill:hover:not(.active) { border-color: #94a3b8; }
+  .btn-submit {
+    width: 100%;
+    background: linear-gradient(135deg, #1e3a5f, #2d6a4f);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 16px;
+    font-size: 1.05rem;
+    font-weight: 900;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    margin-top: 4px;
+    transition: opacity 0.15s;
+  }
+  .btn-submit:hover { opacity: 0.9; }
+  .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+  .form-note { font-size: 0.78rem; font-weight: 600; color: var(--muted); margin-top: 12px; text-align: center; line-height: 1.5; }
+  .contact-success {
+    background: white;
+    border-radius: var(--radius);
+    padding: 40px 20px;
+    box-shadow: var(--shadow);
+    margin-bottom: 28px;
+    text-align: center;
+  }
+  .contact-success h3 { font-size: 1.4rem; font-weight: 900; margin-bottom: 8px; color: #16a34a; }
+  .contact-success p { font-size: 1rem; font-weight: 600; color: var(--muted); line-height: 1.5; }
+
+  /* INSTALL BANNER */
+  .install-banner {
+    display: none;
+    background: linear-gradient(135deg, #1e3a5f, #2d6a4f);
+    color: white;
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    align-items: center;
+    gap: 14px;
+  }
+  .install-banner.show { display: flex; }
+  .install-banner .i-icon { font-size: 2.2rem; flex-shrink: 0; }
+  .install-banner h3 { font-size: 1rem; font-weight: 900; line-height: 1.2; }
+  .install-banner p { font-size: 0.82rem; font-weight: 600; opacity: 0.88; margin-top: 3px; }
+  .install-banner .install-btns { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .btn-install {
+    background: white;
+    color: #1e3a5f;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-size: 0.88rem;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+  }
+  .btn-dismiss {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+  }
+
+  .btn-feature {
+    display: inline-block;
+    background: white;
+    color: #1e3a5f;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    text-decoration: none;
+    transition: opacity 0.15s;
+  }
+  .btn-feature:hover { opacity: 0.88; }
+
+  footer {
+    text-align: center;
+    padding: 16px;
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-weight: 600;
+    line-height: 1.6;
+  }
+  footer a { color: var(--muted); }
+
+  /* FUNDING CARD */
+  .funding-card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 22px 20px;
+    margin-bottom: 28px;
+    border: 2px solid #fde68a;
+  }
+  .funding-top {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 18px;
+  }
+  .funding-emoji { font-size: 2.4rem; flex-shrink: 0; line-height: 1; }
+  .funding-top h3 { font-size: 1.05rem; font-weight: 900; color: #1e3a5f; margin-bottom: 5px; }
+  .funding-top p { font-size: 0.9rem; font-weight: 600; color: var(--muted); line-height: 1.5; }
+  .funding-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 460px) { .funding-options { grid-template-columns: 1fr; } }
+  .funding-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 14px 10px;
+    border-radius: 14px;
+    font-size: 0.95rem;
+    font-weight: 900;
+    text-decoration: none;
+    transition: opacity 0.15s, transform 0.15s;
+    line-height: 1.2;
+    gap: 5px;
+  }
+  .funding-btn:hover { opacity: 0.88; transform: translateY(-2px); }
+  .funding-btn span { font-size: 0.75rem; font-weight: 600; opacity: 0.85; line-height: 1.3; }
+  .funding-btn.donate { background: #fef3c7; color: #92400e; border: 2px solid #fde68a; }
+  .funding-btn.petition { background: #dbeafe; color: #1e40af; border: 2px solid #bfdbfe; }
+  .funding-petition {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 14px 16px;
+    border: 1.5px solid var(--border);
+  }
+  .funding-petition p { font-size: 0.88rem; font-weight: 600; color: var(--text); line-height: 1.5; margin-bottom: 10px; }
+  .petition-links { display: flex; gap: 10px; flex-wrap: wrap; }
+  .petition-link {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: #1e3a5f;
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+  .petition-link:hover { background: #f1f5f9; }
+
+  /* WELCOME POPUP */
+  .welcome-modal {
+    text-align: center;
+    padding: 36px 24px 28px;
+    border-radius: 24px;
+    max-width: 480px;
+  }
+  .welcome-emoji { font-size: 3.5rem; display: block; margin-bottom: 12px; }
+  .welcome-title {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #1e3a5f;
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+  .welcome-body {
+    text-align: left;
+    margin-bottom: 22px;
+  }
+  .welcome-body p {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #374151;
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+  .welcome-body p:last-child { margin-bottom: 0; }
+  .btn-welcome-close {
+    width: 100%;
+    background: linear-gradient(135deg, #1e3a5f, #2d6a4f);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 16px;
+    font-size: 1rem;
+    font-weight: 900;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    transition: opacity 0.15s;
+  }
+  .btn-welcome-close:hover { opacity: 0.9; }
+
+  /* Print - hide funding and popup */
+  @media print {
+    .funding-card, #welcomeOverlay { display: none !important; }
+  }
+  @media print {
+    header { background: #1e3a5f !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .modal-overlay { display: none !important; }
+    .btn-small, .btn-action, .btn-feature, .link-item { display: none; }
+    .bin-card { break-inside: avoid; }
+    body { background: white; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🗑️ Beckingham Bin Days</h1>
+  <p>Know when to put your bins out</p>
+  <span class="council-badge">Bassetlaw District Council</span>
+  <div class="resident-notice">⚠️ This is not an official Bassetlaw Council app. It was created by a local resident to help the community. Always verify dates at <a href="https://www.bassetlaw.gov.uk" target="_blank" style="color:#fde68a;">bassetlaw.gov.uk</a></div>
+</header>
+
+<div class="main">
+
+  <!-- ADD TO HOME SCREEN BANNER -->
+  <div class="install-banner" id="installBanner">
+    <div class="i-icon">📲</div>
+    <div style="flex:1">
+      <h3>Add to your home screen</h3>
+      <p>Get quick access — works like an app, no app store needed</p>
+      <div class="install-btns">
+        <button class="btn-install" id="installBtn" onclick="triggerInstall()">Add to home screen</button>
+        <button class="btn-dismiss" onclick="dismissInstall()">Not now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TODAY BANNER (JS fills this) -->
+  <div class="today-banner" id="todayBanner">
+    <div class="bell">🔔</div>
+    <div>
+      <h2 id="bannerTitle">Loading...</h2>
+      <p id="bannerSub"></p>
+    </div>
+  </div>
+
+  <!-- PUT OUT REMINDER -->
+  <div class="putout-card">
+    <div class="icon">⏰</div>
+    <div>
+      <h3>When to put your bins out</h3>
+      <p>
+        <strong>Blue &amp; Green bins (Wed):</strong> Put out Tuesday evening or by 6am Wednesday<br>
+        <strong>Brown bin (Mon):</strong> Put out Sunday evening or by 6am Monday<br>
+        <strong>Black bin (glass):</strong> Put out Tuesday evening before collection day
+      </p>
+    </div>
+  </div>
+
+  <!-- BANK HOLIDAY DISCLAIMER -->
+  <div class="putout-card" style="background:#fff1f2;border-color:#fca5a5;">
+    <div class="icon">📌</div>
+    <div>
+      <h3 style="color:#991b1b;">Bank holidays, Christmas &amp; Easter</h3>
+      <p style="color:#7f1d1d;">Collection dates <strong>may change</strong> during bank holidays, Christmas and Easter periods. Always check <a href="https://www.bassetlaw.gov.uk/bins-recycling-and-waste/bins-for-recycling-and-waste/bin-collection-days/" target="_blank" style="color:#b91c1c;">bassetlaw.gov.uk</a> for the official schedule during these times.</p>
+    </div>
+  </div>
+
+  <!-- BIN CARDS -->
+  <div class="section-title">Your next collections</div>
+
+  <div class="bin-grid">
+
+    <!-- BLUE BIN -->
+    <div class="bin-card blue" onclick="openModal('blue')">
+      <div class="bin-top">
+        <div class="bin-icon">♻️</div>
+        <div class="bin-label">
+          <div class="name">Blue Bin</div>
+          <div class="type">Recycling</div>
+        </div>
+      </div>
+      <div class="next-collection">
+        <div class="label">Next collection</div>
+        <div class="date" id="blueDate">—</div>
+        <div class="days-away" id="blueDays"></div>
+      </div>
+      <div class="bin-card-footer">
+        <button class="btn-small" onclick="event.stopPropagation();openModal('blue')"><span class="icon">📋</span>What goes in</button>
+        <button class="btn-small" id="blueCalBtn" onclick="event.stopPropagation();promptCalendar('blue')"><span class="icon">📅</span>Add to calendar</button>
+      </div>
+    </div>
+
+    <!-- GREEN BIN -->
+    <div class="bin-card green" onclick="openModal('green')">
+      <div class="bin-top">
+        <div class="bin-icon">🟢</div>
+        <div class="bin-label">
+          <div class="name">Green Bin</div>
+          <div class="type">Landfill / General Waste</div>
+        </div>
+      </div>
+      <div class="next-collection">
+        <div class="label">Next collection</div>
+        <div class="date" id="greenDate">—</div>
+        <div class="days-away" id="greenDays"></div>
+      </div>
+      <div class="bin-card-footer">
+        <button class="btn-small" onclick="event.stopPropagation();openModal('green')"><span class="icon">📋</span>What goes in</button>
+        <button class="btn-small" id="greenCalBtn" onclick="event.stopPropagation();promptCalendar('green')"><span class="icon">📅</span>Add to calendar</button>
+      </div>
+    </div>
+
+    <!-- BROWN BIN -->
+    <div class="bin-card brown" onclick="openModal('brown')">
+      <div class="bin-top">
+        <div class="bin-icon">🌿</div>
+        <div class="bin-label">
+          <div class="name">Brown Bin</div>
+          <div class="type">Garden Waste (subscription)</div>
+        </div>
+      </div>
+      <div class="next-collection">
+        <div class="label">Next collection</div>
+        <div class="date" id="brownDate">—</div>
+        <div class="days-away" id="brownDays"></div>
+      </div>
+      <div class="bin-card-footer">
+        <button class="btn-small" onclick="event.stopPropagation();openModal('brown')"><span class="icon">📋</span>What goes in</button>
+        <button class="btn-small" id="brownCalBtn" onclick="event.stopPropagation();promptCalendar('brown')"><span class="icon">📅</span>Add to calendar</button>
+      </div>
+    </div>
+
+    <!-- BLACK BIN -->
+    <div class="bin-card black" onclick="openModal('black')">
+      <div class="bin-top">
+        <div class="bin-icon">🍾</div>
+        <div class="bin-label">
+          <div class="name">Black Bin</div>
+          <div class="type">Glass Recycling</div>
+        </div>
+      </div>
+      <div class="next-collection">
+        <div class="label">Next collection</div>
+        <div class="date" id="blackDate">—</div>
+        <div class="days-away" id="blackDays"></div>
+      </div>
+      <div class="bin-card-footer">
+        <button class="btn-small" onclick="event.stopPropagation();openModal('black')"><span class="icon">📋</span>What goes in</button>
+        <button class="btn-small" id="blackCalBtn" onclick="event.stopPropagation();promptCalendar('black')"><span class="icon">📅</span>Add to calendar</button>
+      </div>
+    </div>
+
+    <!-- FOOD WASTE (COMING SOON) -->
+    <div class="bin-card food" style="grid-column: 1 / -1; cursor: default;">
+      <div class="bin-top">
+        <div class="bin-icon">🍎</div>
+        <div class="bin-label">
+          <div class="name">Food Waste Bin</div>
+          <div class="type">Caddy Collection</div>
+        </div>
+        <span class="coming-soon-tag">Coming Soon</span>
+      </div>
+      <p style="font-size:0.9rem;font-weight:700;color:#6d28d9;line-height:1.4;">Bassetlaw District Council will be introducing food waste collections soon. We'll update this page as soon as dates are confirmed.</p>
+    </div>
+
+  </div>
+
+  <!-- USEFUL LINKS -->
+  <div class="section-title">Useful links</div>
+  <div class="links-section">
+    <a class="link-item" href="https://www.bassetlaw.gov.uk/bins-recycling-and-waste/bins-for-recycling-and-waste/missed-bin/" target="_blank">
+      <div class="l-icon" style="background:#fee2e2;">🚛</div>
+      <div>
+        <div>Report a missed collection</div>
+        <p>Tell the council if your bin wasn't collected</p>
+      </div>
+      <span class="l-arrow">›</span>
+    </a>
+    <a class="link-item" href="https://www.bassetlaw.gov.uk/bins-recycling-and-waste/bins-for-recycling-and-waste/bin-collection-days/" target="_blank">
+      <div class="l-icon" style="background:#dbeafe;">📅</div>
+      <div>
+        <div>Official collection day checker</div>
+        <p>Bassetlaw Council's postcode lookup tool</p>
+      </div>
+      <span class="l-arrow">›</span>
+    </a>
+    <a class="link-item" href="https://www.bassetlaw.gov.uk/bins-recycling-and-waste/updates-on-bin-collections/" target="_blank">
+      <div class="l-icon" style="background:#fef9c3;">⚠️</div>
+      <div>
+        <div>Collection disruption updates</div>
+        <p>Check for delays or service changes</p>
+      </div>
+      <span class="l-arrow">›</span>
+    </a>
+    <a class="link-item" href="https://www.bassetlaw.gov.uk/bins-recycling-and-waste/bins-for-recycling-and-waste/new-additional-damaged-or-replacement-bins/" target="_blank">
+      <div class="l-icon" style="background:#dcfce7;">🗑️</div>
+      <div>
+        <div>Request a new or replacement bin</div>
+        <p>Missing, damaged or need an extra bin</p>
+      </div>
+      <span class="l-arrow">›</span>
+    </a>
+    <a class="link-item" href="https://www.bassetlaw.gov.uk/bins-recycling-and-waste/bins-for-recycling-and-waste/assisted-bin-collections/" target="_blank">
+      <div class="l-icon" style="background:#e0e7ff;">♿</div>
+      <div>
+        <div>Assisted bin collections</div>
+        <p>Help for those unable to take bins to kerbside</p>
+      </div>
+      <span class="l-arrow">›</span>
+    </a>
+    <a class="link-item" href="https://www.bassetlaw.gov.uk/bins-recycling-and-waste/bins-for-recycling-and-waste/garden-waste-collection-scheme/" target="_blank">
+      <div class="l-icon" style="background:#fef3c7;">🌿</div>
+      <div>
+        <div>Sign up for garden waste (brown bin)</div>
+        <p>Annual subscription required for brown bin collections</p>
+      </div>
+      <span class="l-arrow">›</span>
+    </a>
+  </div>
+
+  <!-- PRINT -->
+  <div class="actions-row" style="margin-bottom:28px;">
+    <button class="btn-action" onclick="window.print()">
+      <span class="a-icon">🖨️</span>
+      Print this page
+    </button>
+    <button class="btn-action" onclick="openModal('allSchedule')">
+      <span class="a-icon">📆</span>
+      Full year schedule
+    </button>
+  </div>
+
+  <!-- FUNDING / DONATE CARD -->
+  <div class="section-title">Support this app</div>
+  <div class="funding-card">
+    <div class="funding-top">
+      <span class="funding-emoji">🥜</span>
+      <div>
+        <h3>Free to use, funded by a resident</h3>
+        <p>This app is provided completely free, at my own expense. I'm happy to expand it to every village in Bassetlaw — but to do that, I'll need a little help.</p>
+      </div>
+    </div>
+    <div class="funding-options">
+      <a class="funding-btn donate" href="https://ko-fi.com/itsclem" target="_blank">
+        ☕ Buy me a coffee
+        <span>Direct donation — any amount helps</span>
+      </a>
+      <a class="funding-btn petition" href="mailto:binday@itsclem.co.uk?subject=I%20want%20my%20village%20added&body=Hi%2C%20I%27d%20like%20my%20village%20added%20to%20the%20Bassetlaw%20Bin%20Days%20app.%0A%0AMy%20village%3A%20%0APostcode%3A%20%0A%0APlease%20expand%20the%20app!" target="_blank">
+        📍 Request your village
+        <span>I'll add it — more requests = more priority</span>
+      </a>
+    </div>
+    <div class="funding-petition">
+      <p>💬 <strong>Want this funded properly?</strong> Ask your local councillors or MP to support community digital services — it costs a fraction of what councils spend on technology that doesn't work.</p>
+      <div class="petition-links">
+        <a href="https://www.bassetlaw.gov.uk/council-and-democracy/your-councillor/" target="_blank" class="petition-link">Find your councillor →</a>
+        <a href="https://members.parliament.uk/FindYourMP" target="_blank" class="petition-link">Find your MP →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTACT / FEATURE REQUEST FORM -->
+  <div class="section-title">Get in touch</div>
+  <div class="contact-card" id="contactCard">
+    <h3>💬 Request a feature, report an issue or suggest a village</h3>
+    <p>Is your village missing? Spotted an error? Want a new feature? We'd love to hear from you.</p>
+
+    <div class="form-group">
+      <label class="form-label">What's your message about?</label>
+      <div class="type-pills" id="typePills">
+        <button class="type-pill active" onclick="selectPill(this,'Request a new village')">📍 Add my village</button>
+        <button class="type-pill" onclick="selectPill(this,'Feature request')">💡 Feature request</button>
+        <button class="type-pill" onclick="selectPill(this,'Report an error')">⚠️ Report an error</button>
+        <button class="type-pill" onclick="selectPill(this,'Missed collection report')">🚛 Missed collection</button>
+        <button class="type-pill" onclick="selectPill(this,'Other')">💬 Other</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="contactName">Your name <span style="color:#94a3b8;font-weight:600;">(optional)</span></label>
+      <input class="form-input" type="text" id="contactName" placeholder="e.g. Jane Smith">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="contactVillage">Your village / postcode</label>
+      <input class="form-input" type="text" id="contactVillage" placeholder="e.g. Beckingham, DN10 4NY">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="contactMsg">Your message</label>
+      <textarea class="form-input form-textarea" id="contactMsg" placeholder="Tell us what you'd like — the more detail the better!"></textarea>
+    </div>
+
+    <button class="btn-submit" onclick="submitForm()">
+      <span id="submitLabel">Send message ✉️</span>
+    </button>
+
+    <p class="form-note">Messages are sent to <strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b9dbd0d7ddd8c0f9d0cdcadad5dcd497dad697ccd2">[email&#160;protected]</a></strong> and reviewed by a local volunteer. We'll try to respond within a few days.</p>
+  </div>
+
+  <!-- SUCCESS STATE -->
+  <div class="contact-success" id="contactSuccess" style="display:none;">
+    <div style="font-size:3rem;margin-bottom:12px;">🎉</div>
+    <h3>Message sent!</h3>
+    <p>Thanks for getting in touch. We'll review your message and get back to you if needed.</p>
+    <button class="btn-feature" style="margin-top:16px;" onclick="resetForm()">Send another message</button>
+  </div>
+
+</div><!-- /main -->
+
+<!-- ===================== MODALS ===================== -->
+
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modalContent">
+    <!-- filled by JS -->
+  </div>
+</div>
+
+<footer>
+  <div style="margin-bottom:10px;">
+    <strong>Beckingham, Nottinghamshire</strong> (DN10 4PS / DN10 4NY)
+  </div>
+  <div style="margin-bottom:8px;">
+    ⚠️ <strong>Not an official service.</strong> Created by a Beckingham resident to help the local community.<br>
+    Always verify collection dates at <a href="https://www.bassetlaw.gov.uk" target="_blank">bassetlaw.gov.uk</a>
+  </div>
+  <div style="margin-bottom:8px;">
+    📌 Dates may change during <strong>bank holidays, Christmas and Easter</strong> — always check the council website during these periods.
+  </div>
+  <div>
+    Built by <a href="https://itsclem.co.uk" target="_blank" style="color:#64748b;font-weight:800;">itsclem.co.uk</a> &nbsp;·&nbsp; <span id="lastUpdated"></span>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ============================================================
+//  DATA
+// ============================================================
+
+const TODAY = new Date();
+TODAY.setHours(0,0,0,0);
+
+function dateOnly(d){ const x=new Date(d); x.setHours(0,0,0,0); return x; }
+
+function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
+
+function fmtDate(d){
+  const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return days[d.getDay()]+' '+d.getDate()+' '+months[d.getMonth()]+' '+d.getFullYear();
+}
+function fmtShort(d){
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return d.getDate()+' '+months[d.getMonth()]+' '+d.getFullYear();
+}
+function daysUntil(d){
+  const diff = Math.round((dateOnly(d)-TODAY)/(86400000));
+  if(diff===0) return 'TODAY';
+  if(diff===1) return 'Tomorrow';
+  if(diff===-1) return 'Yesterday';
+  if(diff<0) return diff+' days ago';
+  return 'In '+diff+' days';
+}
+function urgencyColor(d){
+  const diff=Math.round((dateOnly(d)-TODAY)/86400000);
+  if(diff<=0) return '#16a34a';
+  if(diff<=2) return '#dc2626';
+  if(diff<=7) return '#d97706';
+  return '#64748b';
+}
+
+// --- BLUE/GREEN fortnightly Wednesdays ---
+// Reference: week of 14 Apr 2026 (Mon) = BLUE week
+// Blue Wednesdays: 15 Apr, 29 Apr, 13 May, 27 May, ...
+// Green Wednesdays: 22 Apr, 6 May, 20 May, ...
+
+const REF_BLUE_WED = dateOnly(new Date(2026,3,15)); // 15 Apr 2026
+
+function getFortnightlyDates(refDate, countFuture=20){
+  const dates=[];
+  // go back far enough
+  let d = new Date(refDate);
+  while(d > addDays(TODAY,-70)) d = addDays(d,-14);
+  for(let i=0;i<countFuture+10;i++){
+    if(d >= addDays(TODAY,-1)) dates.push(new Date(d));
+    d=addDays(d,14);
+    if(dates.length>=countFuture) break;
+  }
+  return dates;
+}
+
+function nextDate(dates){
+  return dates.find(d=>dateOnly(d)>=TODAY) || dates[dates.length-1];
+}
+
+// Blue: ref 15 Apr 2026, every 14 days
+const blueDates = getFortnightlyDates(REF_BLUE_WED, 26);
+// Green: offset +7 from blue ref
+const REF_GREEN_WED = addDays(REF_BLUE_WED, 7);
+const greenDates = getFortnightlyDates(REF_GREEN_WED, 26);
+
+// Brown: Mondays fortnightly. Last collected: 14 Apr 2026 (Monday)
+const REF_BROWN_MON = dateOnly(new Date(2026,3,14)); // 14 Apr 2026
+const brownDates = getFortnightlyDates(REF_BROWN_MON, 26);
+
+// Black: specific Tuesday dates
+const blackRaw = [
+  [2026,3,28],[2026,5,9],[2026,6,21],[2026,8,1],
+  [2026,9,13],[2026,10,24],[2027,0,5],[2027,1,16],
+  [2027,2,30],[2027,4,11]
+];
+const blackDates = blackRaw.map(d=>dateOnly(new Date(d[0],d[1],d[2])));
+
+// ============================================================
+//  RENDER CARDS
+// ============================================================
+
+function renderCards(){
+  const nb = nextDate(blueDates);
+  const ng = nextDate(greenDates);
+  const nbr= nextDate(brownDates);
+  const nbl= blackDates.find(d=>d>=TODAY)||blackDates[blackDates.length-1];
+
+  function setCard(prefix, d){
+    document.getElementById(prefix+'Date').textContent = fmtDate(d);
+    const el = document.getElementById(prefix+'Days');
+    const txt = daysUntil(d);
+    el.textContent = txt;
+    el.style.color = urgencyColor(d);
+    // Update "Add dates" button to show next date
+    const btn = document.getElementById(prefix+'CalBtn');
+    if(btn) btn.innerHTML = '<span class="icon">📅</span>Add to calendar';
+  }
+  setCard('blue',nb);
+  setCard('green',ng);
+  setCard('brown',nbr);
+  setCard('black',nbl);
+}
+
+// ============================================================
+//  TODAY BANNER
+// ============================================================
+
+function renderBanner(){
+  const title = document.getElementById('bannerTitle');
+  const sub   = document.getElementById('bannerSub');
+  const banner= document.getElementById('todayBanner');
+
+  // Check if any collection is today or tomorrow
+  const checks = [
+    { dates: blueDates,  label:'♻️ Blue Bin (Recycling)', putout:'Put it out tonight (Tuesday)!' },
+    { dates: greenDates, label:'🟢 Green Bin (Landfill)',  putout:'Put it out tonight (Tuesday)!' },
+    { dates: brownDates, label:'🌿 Brown Bin (Garden)',    putout:'Put it out tonight (Sunday)!' },
+    { dates: blackDates, label:'⬛ Black Bin (Glass)',     putout:'Put it out tonight (Monday)!' },
+  ];
+
+  let todayCollections=[], tomorrowCollections=[];
+  checks.forEach(c=>{
+    const next=nextDate(c.dates instanceof Array ? c.dates : [c.dates]);
+    const diff=Math.round((dateOnly(next)-TODAY)/86400000);
+    if(diff===0) todayCollections.push(c.label);
+    if(diff===1) tomorrowCollections.push(c.label);
+  });
+
+  if(todayCollections.length){
+    banner.style.background='linear-gradient(135deg,#16a34a,#15803d)';
+    title.textContent='Collection day today! 🎉';
+    sub.textContent=todayCollections.join(' · ');
+  } else if(tomorrowCollections.length){
+    banner.style.background='linear-gradient(135deg,#d97706,#b45309)';
+    title.textContent='⚠️ Put bins out tonight!';
+    sub.textContent='Tomorrow: '+tomorrowCollections.join(' · ');
+  } else {
+    const days=[];
+    checks.forEach(c=>{
+      const next=nextDate(c.dates instanceof Array ? c.dates : [c.dates]);
+      const diff=Math.round((dateOnly(next)-TODAY)/86400000);
+      days.push({diff,label:c.label,date:next});
+    });
+    days.sort((a,b)=>a.diff-b.diff);
+    const soonest=days[0];
+    title.textContent='Next: '+soonest.label;
+    sub.textContent=fmtDate(soonest.date)+' · '+daysUntil(soonest.date);
+  }
+}
+
+// ============================================================
+//  MODAL CONTENT
+// ============================================================
+
+const modalData = {
+  blue: {
+    icon:'♻️', iconBg:'#dbeafe', title:'Blue Bin — Recycling',
+    yes:[
+      {i:'📰',t:'Newspapers & magazines'},{i:'✉️',t:'Envelopes & junk mail'},
+      {i:'📦',t:'Cardboard boxes & tubes'},{i:'🥚',t:'Egg boxes'},
+      {i:'🧴',t:'Plastic bottles & containers'},{i:'🧃',t:'Squash & milk bottles'},
+      {i:'🧹',t:'Shampoo & cleaning bottles'},{i:'🥛',t:'Yoghurt pots & tubs'},
+      {i:'🥫',t:'Food & drink tins/cans'},{i:'🍺',t:'Aluminium drink cans'},
+      {i:'💨',t:'Empty aerosol cans'},{i:'🥦',t:'Plastic food trays (clean)'},
+      {i:'🥩',t:'Foil trays (clean)'},{i:'📬',t:'Catalogues & directories'},
+    ],
+    no:[
+      {i:'🍕',t:'Pizza/burger boxes (greasy)'},{i:'🗂️',t:'Shredded paper'},
+      {i:'🥤',t:'Plastic bags / bin liners'},{i:'🍾',t:'Glass (use black bin)'},
+      {i:'🔋',t:'Batteries or vapes'},{i:'💡',t:'Electrical items'},
+      {i:'🥩',t:'Food waste'},{i:'🍝',t:'Food-soiled packaging'},
+    ],
+    note:'Items must be clean, dry, empty and loose. Remove lids and place in green bin. Collected every two weeks on Wednesdays.',
+    dates: null
+  },
+  green: {
+    icon:'🟢', iconBg:'#dcfce7', title:'Green Bin — Landfill / General Waste',
+    yes:[
+      {i:'🍝',t:'Wrapped kitchen / food waste'},{i:'👶',t:'Nappies (securely bagged)'},
+      {i:'🥩',t:'Plastic food trays'},{i:'🧢',t:'Non-recyclable plastic'},
+      {i:'🪟',t:'Broken crockery / ceramics'},{i:'🧹',t:'Hoover bags & dust'},
+      {i:'🚬',t:'Cigarette ends'},{i:'🪮',t:'Pet waste (bagged)'},
+      {i:'🧻',t:'Tissues & kitchen roll'},{i:'💊',t:'Polystyrene packaging'},
+    ],
+    no:[
+      {i:'♻️',t:'Recyclables (use blue bin)'},{i:'🌿',t:'Garden waste (use brown bin)'},
+      {i:'🍾',t:'Glass (use black bin)'},{i:'🔋',t:'Batteries or chemicals'},
+      {i:'💡',t:'Electrical items'},{i:'🏗️',t:'Building materials'},
+    ],
+    note:'Wrap or bag food waste to avoid smells. Lid must be fully closed. Collected every two weeks on Wednesdays (alternates with blue bin).',
+    dates: null
+  },
+  brown: {
+    icon:'🌿', iconBg:'#fef3c7', title:'Brown Bin — Garden Waste',
+    yes:[
+      {i:'🌿',t:'Grass cuttings'},{i:'🍂',t:'Fallen leaves'},
+      {i:'✂️',t:'Hedge trimmings'},{i:'🌸',t:'Flowers & plants'},
+      {i:'🌲',t:'Small branches (chopped)'},{i:'🎄',t:'Christmas tree remains'},
+      {i:'🌱',t:'Weeds (not seeding)'},{i:'🪴',t:'Prunings & clippings'},
+    ],
+    no:[
+      {i:'🍝',t:'Food waste (use green bin)'},{i:'🪨',t:'Stones or soil'},
+      {i:'🐾',t:'Animal waste'},{i:'🧴',t:'Plastic bags / pots'},
+      {i:'📰',t:'Paper or cardboard'},{i:'🪵',t:'Treated / painted wood'},
+    ],
+    note:'Annual subscription required — visit bassetlaw.gov.uk to sign up. Collected fortnightly on Mondays. Put out Sunday evening.',
+    dates: null
+  },
+  black: {
+    icon:'🍾', iconBg:'#e5e7eb', title:'Black Bin — Glass Recycling',
+    yes:[
+      {i:'🍷',t:'Wine & beer bottles'},{i:'🥫',t:'Sauce & condiment jars'},
+      {i:'💄',t:'Cosmetics jars'},{i:'🌸',t:'Perfume bottles'},
+      {i:'🍯',t:'Jam & preserve jars'},{i:'🧴',t:'Glass toiletry bottles'},
+    ],
+    no:[
+      {i:'🪟',t:'Window / mirror glass'},{i:'💡',t:'Light bulbs'},
+      {i:'🍽️',t:'Pyrex / ovenware'},{i:'🥂',t:'Drinking glasses / crystal'},
+      {i:'🪞',t:'Broken glass (wrap & green bin)'},{i:'📺',t:'TV / screen glass'},
+    ],
+    note:'Collected every 6 weeks on a Tuesday. Put out Monday evening. A new service for Beckingham starting from 28 April 2026.',
+    dates: blackDates
+  },
+  allSchedule: {
+    icon:'📆', iconBg:'#e0e7ff', title:'Full Year Schedule — Beckingham',
+    special: true
+  }
+};
+
+function openModal(type){
+  const overlay = document.getElementById('modalOverlay');
+  const mc = document.getElementById('modalContent');
+  const data = modalData[type];
+
+  if(type==='allSchedule'){
+    mc.innerHTML = buildAllSchedule();
+  } else {
+    mc.innerHTML = buildBinModal(type, data);
+  }
+
+  overlay.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeModal(e){
+  if(e.target.id==='modalOverlay' || e.target.classList.contains('modal-close')){
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.body.style.overflow='';
+  }
+}
+
+function buildBinModal(type, data){
+  let html=`
+    <div class="modal-header">
+      <div class="modal-icon" style="background:${data.iconBg}">${data.icon}</div>
+      <h2>${data.title}</h2>
+      <button class="modal-close" onclick="document.getElementById('modalOverlay').classList.remove('open');document.body.style.overflow=''">✕</button>
+    </div>`;
+
+  if(data.note){
+    html+=`<div class="putout-card" style="margin-bottom:16px;"><div class="icon">ℹ️</div><div><p>${data.note}</p></div></div>`;
+  }
+
+  // Upcoming dates
+  let dates = type==='blue' ? blueDates : type==='green' ? greenDates : type==='brown' ? brownDates : blackDates;
+  const upcoming = dates.filter(d=>dateOnly(d)>=addDays(TODAY,-1)).slice(0,8);
+  html+=`<div class="items-section"><h3>📅 Upcoming collection dates</h3><ul class="schedule-list">`;
+  upcoming.forEach(d=>{
+    const diff=Math.round((dateOnly(d)-TODAY)/86400000);
+    const cls = diff<0?'s-past':diff===0||diff<=1?'s-next':'s-future';
+    const txt = daysUntil(d);
+    html+=`<li class="${cls}"><span class="s-date">${fmtDate(d)}</span><span class="s-away">${txt}</span></li>`;
+  });
+  html+=`</ul></div>`;
+
+  if(data.yes){
+    html+=`<div class="items-section"><h3>✅ What CAN go in</h3><div class="items-grid">`;
+    data.yes.forEach(item=>{ html+=`<div class="item-chip"><span class="chip-icon">${item.i}</span>${item.t}</div>`; });
+    html+=`</div></div>`;
+  }
+  if(data.no){
+    html+=`<div class="items-section"><h3>❌ What CANNOT go in</h3><div class="items-grid">`;
+    data.no.forEach(item=>{ html+=`<div class="item-chip no"><span class="chip-icon">${item.i}</span>${item.t}</div>`; });
+    html+=`</div></div>`;
+  }
+
+  html+=`<div class="actions-row">
+    <button class="btn-action" onclick="addToCalendar('${type}')"><span class="a-icon">📅</span>Add to calendar</button>
+    <button class="btn-action" onclick="window.print()"><span class="a-icon">🖨️</span>Print</button>
+  </div>`;
+
+  return html;
+}
+
+function buildAllSchedule(){
+  // Merge and interleave all dates
+  const all=[];
+  blueDates.slice(0,14).forEach(d=>all.push({d,type:'blue',label:'♻️ Blue Bin'}));
+  greenDates.slice(0,14).forEach(d=>all.push({d,type:'green',label:'🟢 Green Bin'}));
+  brownDates.slice(0,14).forEach(d=>all.push({d,type:'brown',label:'🌿 Brown Bin'}));
+  blackDates.forEach(d=>all.push({d,type:'black',label:'⬛ Black Bin (Glass)'}));
+  all.sort((a,b)=>a.d-b.d);
+
+  let html=`
+    <div class="modal-header">
+      <div class="modal-icon" style="background:#e0e7ff">📆</div>
+      <h2>Full Year Schedule</h2>
+      <button class="modal-close" onclick="document.getElementById('modalOverlay').classList.remove('open');document.body.style.overflow=''">✕</button>
+    </div>
+    <p style="font-size:0.9rem;font-weight:700;color:#64748b;margin-bottom:16px;">Beckingham — all bins, sorted by date</p>
+    <ul class="schedule-list">`;
+
+  all.forEach(item=>{
+    const diff=Math.round((dateOnly(item.d)-TODAY)/86400000);
+    const cls=diff<0?'s-past':diff<=1?'s-next':'s-future';
+    const colors={blue:var_blue,green:var_green,brown:var_brown,black:'#222'};
+    const txt=daysUntil(item.d);
+    html+=`<li class="${cls}">
+      <span style="font-size:1.1rem">${item.label.split(' ')[0]}</span>
+      <span class="s-date">${fmtShort(item.d)} <span class="s-dow">${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][item.d.getDay()]}</span></span>
+      <span class="s-away">${diff>=0?txt:''}</span>
+    </li>`;
+  });
+
+  html+=`</ul>
+    <div class="actions-row" style="margin-top:16px;">
+      <button class="btn-action" onclick="window.print()"><span class="a-icon">🖨️</span>Print schedule</button>
+      <button class="btn-action" onclick="downloadICS()"><span class="a-icon">📅</span>Download .ics</button>
+    </div>`;
+
+  return html;
+}
+
+// Colour references for JS string building
+const var_blue='#2563eb', var_green='#16a34a', var_brown='#92400e';
+
+// ============================================================
+//  CALENDAR / ICS
+// ============================================================
+
+function promptCalendar(type){
+  const labels = {
+    blue:'♻️ Blue Bin (Recycling)', green:'🟢 Green Bin (Landfill)',
+    brown:'🌿 Brown Bin (Garden Waste)', black:'⬛ Black Bin (Glass)'
+  };
+  const dates = type==='blue'?blueDates:type==='green'?greenDates:type==='brown'?brownDates:blackDates;
+  const upcoming = dates.filter(d=>d>=TODAY).slice(0,5);
+  const next = upcoming[0];
+
+  const mc = document.getElementById('modalContent');
+  mc.innerHTML=`
+    <div class="modal-header">
+      <div class="modal-icon" style="background:#e0e7ff">📅</div>
+      <h2>Add to Calendar</h2>
+      <button class="modal-close" onclick="document.getElementById('modalOverlay').classList.remove('open');document.body.style.overflow=''">✕</button>
+    </div>
+    <p style="font-size:1rem;font-weight:700;margin-bottom:16px;color:#374151;">${labels[type]}</p>
+    <div class="putout-card" style="margin-bottom:16px;">
+      <div class="icon">📌</div>
+      <div>
+        <h3>Next collection</h3>
+        <p style="font-size:1.15rem;color:#1e3a5f;">${fmtDate(next)}</p>
+        <p style="margin-top:4px;">${daysUntil(next)}</p>
+      </div>
+    </div>
+    <div class="items-section">
+      <h3>📅 All upcoming dates included</h3>
+      <ul class="schedule-list">
+        ${upcoming.map(d=>{
+          const diff=Math.round((dateOnly(d)-TODAY)/86400000);
+          const cls=diff<=1?'s-next':'s-future';
+          return `<li class="${cls}"><span class="s-date">${fmtDate(d)}</span><span class="s-away">${daysUntil(d)}</span></li>`;
+        }).join('')}
+        ${upcoming.length<dates.filter(d=>d>=TODAY).length?'<li style="opacity:0.5;font-size:0.85rem;padding:8px 0;">+ more dates included in download</li>':''}
+      </ul>
+    </div>
+    <div class="putout-card" style="background:#fff8e1;border-color:#f59e0b;margin-bottom:16px;">
+      <div class="icon">⚠️</div>
+      <div><p style="color:#78350f;">Dates may change over bank holidays, Christmas and Easter. Check <a href="https://www.bassetlaw.gov.uk" target="_blank" style="color:#92400e;">bassetlaw.gov.uk</a> during these periods.</p></div>
+    </div>
+    <p style="font-size:0.85rem;font-weight:700;color:#64748b;margin-bottom:14px;">Downloads a .ics file — open it to add all dates to Apple Calendar, Google Calendar or Outlook. Each event includes a reminder the day before.</p>
+    <div class="actions-row">
+      <button class="btn-action" onclick="addToCalendar('${type}');document.getElementById('modalOverlay').classList.remove('open');document.body.style.overflow='';" style="background:#1e3a5f;color:white;border-color:#1e3a5f;"><span class="a-icon">⬇️</span>Download .ics file</button>
+      <button class="btn-action" onclick="document.getElementById('modalOverlay').classList.remove('open');document.body.style.overflow=''"><span class="a-icon">✕</span>Cancel</button>
+    </div>`;
+
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function addToCalendar(type){
+  // Build ICS for the bin type
+  let dates=[], title='', description='';
+  if(type==='blue'){  dates=blueDates;  title='♻️ Blue Bin (Recycling) — Beckingham'; description='Recycling bin collection day. Put out Tuesday evening.'; }
+  if(type==='green'){ dates=greenDates; title='🟢 Green Bin (Landfill) — Beckingham'; description='Landfill bin collection day. Put out Tuesday evening.'; }
+  if(type==='brown'){ dates=brownDates; title='🌿 Brown Bin (Garden Waste) — Beckingham'; description='Garden waste collection (subscription). Put out Sunday evening.'; }
+  if(type==='black'){ dates=blackDates; title='⬛ Black Bin (Glass) — Beckingham'; description='Glass recycling collection every 6 weeks. Put out Monday evening.'; }
+
+  const ics = buildICS(dates.filter(d=>d>=TODAY).slice(0,20), title, description);
+  downloadFile('beckingham-'+type+'-bin.ics', ics, 'text/calendar');
+}
+
+function downloadICS(){
+  // All bins
+  const all=[];
+  blueDates.filter(d=>d>=TODAY).slice(0,20).forEach(d=>all.push({d,title:'♻️ Blue Bin (Recycling) — Beckingham',desc:'Put out Tuesday evening.'}));
+  greenDates.filter(d=>d>=TODAY).slice(0,20).forEach(d=>all.push({d,title:'🟢 Green Bin (Landfill) — Beckingham',desc:'Put out Tuesday evening.'}));
+  brownDates.filter(d=>d>=TODAY).slice(0,20).forEach(d=>all.push({d,title:'🌿 Brown Bin (Garden Waste) — Beckingham',desc:'Put out Sunday evening.'}));
+  blackDates.filter(d=>d>=TODAY).forEach(d=>all.push({d,title:'⬛ Black Bin (Glass) — Beckingham',desc:'Put out Monday evening.'}));
+  all.sort((a,b)=>a.d-b.d);
+
+  let ics='BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Beckingham Bins//EN\r\nCALSCALE:GREGORIAN\r\nX-WR-CALNAME:Beckingham Bin Collections\r\n';
+  all.forEach((item,i)=>{
+    const ds=fmtICS(item.d);
+    ics+=`BEGIN:VEVENT\r\nUID:beckingham-bin-${i}@bins\r\nDTSTART;VALUE=DATE:${ds}\r\nDTEND;VALUE=DATE:${ds}\r\nSUMMARY:${item.title}\r\nDESCRIPTION:${item.desc}\r\nBEGIN:VALARM\r\nTRIGGER:-P1D\r\nACTION:DISPLAY\r\nDESCRIPTION:Put your bin out tonight!\r\nEND:VALARM\r\nEND:VEVENT\r\n`;
+  });
+  ics+='END:VCALENDAR';
+  downloadFile('beckingham-all-bins.ics', ics, 'text/calendar');
+}
+
+function buildICS(dates, title, desc){
+  let ics='BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Beckingham Bins//EN\r\nCALSCALE:GREGORIAN\r\n';
+  dates.forEach((d,i)=>{
+    const ds=fmtICS(d);
+    ics+=`BEGIN:VEVENT\r\nUID:beckingham-${title.replace(/\s/g,'')}-${i}@bins\r\nDTSTART;VALUE=DATE:${ds}\r\nDTEND;VALUE=DATE:${ds}\r\nSUMMARY:${title}\r\nDESCRIPTION:${desc}\r\nBEGIN:VALARM\r\nTRIGGER:-P1D\r\nACTION:DISPLAY\r\nDESCRIPTION:Put your bin out tonight!\r\nEND:VALARM\r\nEND:VEVENT\r\n`;
+  });
+  ics+='END:VCALENDAR';
+  return ics;
+}
+
+function fmtICS(d){
+  const y=d.getFullYear();
+  const m=String(d.getMonth()+1).padStart(2,'0');
+  const day=String(d.getDate()).padStart(2,'0');
+  return y+''+m+''+day;
+}
+
+function downloadFile(name, content, mime){
+  const blob=new Blob([content],{type:mime});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download=name; a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ============================================================
+//  LAST UPDATED
+// ============================================================
+
+document.getElementById('lastUpdated').textContent = 'Last updated: '+fmtShort(new Date(2026,3,14));
+
+// ============================================================
+//  CONTACT FORM
+// ============================================================
+
+let selectedType = 'Request a new village';
+
+function selectPill(el, type){
+  document.querySelectorAll('.type-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  selectedType = type;
+}
+
+function submitForm(){
+  const name    = document.getElementById('contactName').value.trim();
+  const village = document.getElementById('contactVillage').value.trim();
+  const msg     = document.getElementById('contactMsg').value.trim();
+
+  if(!msg){ 
+    document.getElementById('contactMsg').focus();
+    document.getElementById('contactMsg').style.borderColor='#dc2626';
+    setTimeout(()=>document.getElementById('contactMsg').style.borderColor='',2000);
+    return; 
+  }
+
+  const subject = encodeURIComponent('Bin Days App — '+selectedType);
+  const body    = encodeURIComponent(
+    'Type: '+selectedType+'\n'+
+    (name?'Name: '+name+'\n':'')+
+    (village?'Village/Postcode: '+village+'\n':'')+
+    '\nMessage:\n'+msg+'\n\n---\nSent via beckingham-bins app'
+  );
+
+  const btn = document.querySelector('.btn-submit');
+  btn.disabled = true;
+  document.getElementById('submitLabel').textContent = 'Opening email...';
+
+  window.location.href = 'mailto:binday@itsclem.co.uk?subject='+subject+'&body='+body;
+
+  // Show success after short delay
+  setTimeout(()=>{
+    document.getElementById('contactCard').style.display='none';
+    document.getElementById('contactSuccess').style.display='block';
+    btn.disabled=false;
+    document.getElementById('submitLabel').textContent='Send message ✉️';
+  }, 1200);
+}
+
+function resetForm(){
+  document.getElementById('contactName').value='';
+  document.getElementById('contactVillage').value='';
+  document.getElementById('contactMsg').value='';
+  document.querySelectorAll('.type-pill').forEach((p,i)=>p.classList.toggle('active',i===0));
+  selectedType='Request a new village';
+  document.getElementById('contactCard').style.display='block';
+  document.getElementById('contactSuccess').style.display='none';
+}
+
+// ============================================================
+//  PWA / ADD TO HOME SCREEN
+// ============================================================
+
+let deferredPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (e)=>{
+  e.preventDefault();
+  deferredPrompt = e;
+  // Only show if not already dismissed
+  if(!sessionStorage.getItem('installDismissed')){
+    document.getElementById('installBanner').classList.add('show');
+  }
+});
+
+function triggerInstall(){
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(()=>{ 
+      deferredPrompt=null;
+      document.getElementById('installBanner').classList.remove('show');
+    });
+  } else {
+    // Fallback for iOS — show instructions modal
+    const mc = document.getElementById('modalContent');
+    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    mc.innerHTML=`
+      <div class="modal-header">
+        <div class="modal-icon" style="background:#dbeafe">📲</div>
+        <h2>Add to Home Screen</h2>
+        <button class="modal-close" onclick="document.getElementById('modalOverlay').classList.remove('open');document.body.style.overflow=''">✕</button>
+      </div>
+      ${isIOS ? `
+        <div class="putout-card" style="margin-bottom:16px;">
+          <div class="icon">1️⃣</div>
+          <div><h3>Tap the Share button</h3><p>Find the Share icon (box with arrow) at the bottom of your Safari browser</p></div>
+        </div>
+        <div class="putout-card" style="margin-bottom:16px;">
+          <div class="icon">2️⃣</div>
+          <div><h3>Tap "Add to Home Screen"</h3><p>Scroll down in the share menu and tap "Add to Home Screen"</p></div>
+        </div>
+        <div class="putout-card">
+          <div class="icon">3️⃣</div>
+          <div><h3>Tap "Add"</h3><p>The app will appear on your home screen like any other app</p></div>
+        </div>
+      ` : `
+        <div class="putout-card" style="margin-bottom:16px;">
+          <div class="icon">1️⃣</div>
+          <div><h3>Tap the menu (⋮ or ⋯)</h3><p>Tap the three-dot menu in the top right of your browser</p></div>
+        </div>
+        <div class="putout-card">
+          <div class="icon">2️⃣</div>
+          <div><h3>Tap "Add to Home screen" or "Install app"</h3><p>The app will appear on your home screen for quick access</p></div>
+        </div>
+      `}
+      <p style="font-size:0.85rem;font-weight:700;color:#64748b;margin-top:16px;text-align:center;">Works on iPhone, Android, and desktop computers</p>`;
+    document.getElementById('modalOverlay').classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+}
+
+function dismissInstall(){
+  sessionStorage.setItem('installDismissed','1');
+  document.getElementById('installBanner').classList.remove('show');
+}
+
+// Show install hint for iOS (no beforeinstallprompt event)
+window.addEventListener('load',()=>{
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isStandalone = window.navigator.standalone;
+  if(isIOS && !isStandalone && !sessionStorage.getItem('installDismissed')){
+    document.getElementById('installBanner').classList.add('show');
+  }
+});
+
+// ============================================================
+//  WELCOME / PEANUTS POPUP (one-time, localStorage)
+// ============================================================
+
+function showWelcomePopup(){
+  if(localStorage.getItem('welcomeSeen')) return;
+  const overlay = document.getElementById('welcomeOverlay');
+  if(overlay) overlay.classList.add('open');
+}
+
+function closeWelcome(){
+  localStorage.setItem('welcomeSeen','1');
+  const overlay = document.getElementById('welcomeOverlay');
+  if(overlay) overlay.classList.remove('open');
+}
+
+// ============================================================
+//  INIT
+// ============================================================
+
+renderCards();
+renderBanner();
+setTimeout(showWelcomePopup, 800);
+
+</script>
+
+<!-- ===================== WELCOME POPUP ===================== -->
+<div class="modal-overlay" id="welcomeOverlay" onclick="handleWelcomeClick(event)">
+  <div class="modal welcome-modal" id="welcomeModal">
+    <div class="welcome-emoji">🥜</div>
+    <h2 class="welcome-title">A word from the creator</h2>
+    <div class="welcome-body">
+      <p>I built this because the official council apps <strong>don't work — or simply don't exist</strong>. Your taxes are already overpaying for poor digital services from local government.</p>
+      <p>I'll maintain this for <strong>peanuts</strong> compared to what the council spends. I'm funding it for the love of it — but to expand it to more villages, I'll need <strong>a few more peanuts</strong>.</p>
+    </div>
+    <button class="btn-welcome-close" onclick="closeWelcome()">Got it — show me my bin days 🗑️</button>
+  </div>
+</div>
+
+<script>
+function handleWelcomeClick(e){
+  if(e.target.id==='welcomeOverlay') closeWelcome();
+}
+</script>
+
+</body>
+</html>
